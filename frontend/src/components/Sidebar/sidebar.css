@@ -1,0 +1,33 @@
+.sidebar {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100vh; /* Utilise 100vh pour la hauteur totale */
+    width: 300px; /* Ajuste la largeur si nécessaire */
+    background-color: black; /* Assure-toi que le texte contraste bien */
+    transition: transform 0.3s ease; /* Ajuste la durée de la transition */
+    z-index: 9999; /* Vérifie que le z-index est bien configuré */
+  }
+  /* Responsive Styles */
+  @media (max-width: 880px) {
+    .sidebar {
+        width: 100%; /* Full width on small screens */
+        position: fixed; /* Fixed positioning for mobile */
+        transform: translateX(-100%); /* Start hidden off-screen */
+    }
+
+    .sidebar.open {
+        transform: translateX(0); /* Slide in when open */
+    }
+}
+@media (max-width: 768px) { /* Adjust for smaller screens */
+    .sidebar {
+        width: 100%; /* Full width on small screens */
+        position: fixed; /* Fixed positioning for mobile */
+        transform: translateX(-100%); /* Start hidden off-screen */
+    }
+
+    .sidebar.open {
+        transform: translateX(0); /* Slide in */
+    }
+}
