@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { User } from './schemas/user.schema';
 import { JwtService } from '@nestjs/jwt';
 import { SignUpDto } from './dto/signup.dto';
@@ -6,11 +6,14 @@ import { LoginDto } from './dto/login.dto';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { UpdateUserDto } from './dto/UpdateUserDto';
+import { Post } from 'src/posts/entities/post.entity';
+import { CreatePostDto } from 'src/posts/dto/create-post.dto';
 export declare class AuthService {
     private userModel;
+    private postModel;
     private jwtService;
     private configService;
-    constructor(userModel: Model<User>, jwtService: JwtService, configService: ConfigService);
+    constructor(userModel: Model<User>, postModel: Model<Post>, jwtService: JwtService, configService: ConfigService);
     signUp(signUpDto: SignUpDto): Promise<{
         token: string;
     }>;
@@ -18,7 +21,7 @@ export declare class AuthService {
         token: string;
     }>;
     validateGoogleUser(googleUser: SignUpDto): Promise<import("mongoose").Document<unknown, {}, User> & User & {
-        _id: import("mongoose").Types.ObjectId;
+        _id: Types.ObjectId;
     } & {
         __v?: number;
     }>;
@@ -30,4 +33,5 @@ export declare class AuthService {
         message: string;
     }>;
     getProfile(userId: string): Promise<User>;
+    addPostToUser(userId: string, createPostDto: CreatePostDto): Promise<Post>;
 }

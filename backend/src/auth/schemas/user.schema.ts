@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { ApiProperty, ApiTags } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
+import { Types } from "mongoose";
 
 export enum UserRole {
     ADMIN = 'admin',
@@ -15,58 +16,71 @@ export class User {
     @Prop({ unique: [true, 'Duplicate email entered'] })
     @ApiProperty()
     email: string;
-    
+
     @Prop()
     @ApiProperty()
     password: string;
 
-    @Prop({ 
-        type: String, 
-        enum: UserRole, 
-        default: UserRole.USER 
+    @Prop({
+        type: String,
+        enum: UserRole,
+        default: UserRole.USER
     })
     @ApiProperty({ enum: UserRole, default: UserRole.USER })
-    role: UserRole; 
+    role: UserRole;
 
     @Prop()
     @ApiProperty()
     @IsOptional()
     firstname: string;
-    
+
     @Prop()
     @ApiProperty()
     @IsOptional()
     lastname: string;
 
-    // Nouveau champ par rania
+    // Nouveau champ par Rania
     @Prop()
     @ApiProperty()
     @IsOptional()
     profilePicture: string;
 
-    
     @Prop()
     @ApiProperty()
     @IsOptional()
     bio: string;
 
-    
-    @Prop({ type: [String] })
+    @Prop()
     @ApiProperty()
     @IsOptional()
     skills: string[];
 
-    
-    @Prop({ type: [{ title: String, description: String, link: String }] })
+    @Prop()
     @ApiProperty()
     @IsOptional()
     projects: { title: string, description: string, link: string }[];
 
-   
-    @Prop({ type: { github: String, linkedin: String, twitter: String } })
+    @Prop({
+        type: { 
+          github: { type: String }, 
+          linkedin: { type: String } 
+        },
+        default: { github: '', linkedin: '' }, // Valeur par défaut si vide
+      })
+      @ApiProperty({
+        type: Object, // Swagger indique qu'il s'agit d'un objet
+        description: 'Social links for the user',
+        example: { github: 'https://github.com/user', linkedin: 'https://linkedin.com/in/user' }
+      })
+      @IsOptional()
+      socialLinks: { github: string; linkedin: string };
+    
+
+
+    @Prop({ type: [Types.ObjectId], ref: 'Post' })
     @ApiProperty()
     @IsOptional()
-    socialLinks: { github: string, linkedin: string, twitter: string };
+    posts: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

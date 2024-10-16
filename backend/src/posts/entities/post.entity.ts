@@ -1,20 +1,30 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, Types } from 'mongoose';  // Import correct de 'Types' depuis 'mongoose'
-import { User } from '../../auth/schemas/user.schema';  // Assure-toi que le chemin est correct
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { ApiProperty } from "@nestjs/swagger";
+import { Document, Types } from "mongoose";
 
-@Schema({ timestamps: true })
+@Schema({
+  timestamps: true
+})
 export class Post extends Document {
+  @Prop({ type: Types.ObjectId, ref: 'User' })
+  @ApiProperty()
+  author: Types.ObjectId;
+
   @Prop({ required: true })
+  @ApiProperty()
   title: string;
 
   @Prop({ required: true })
+  @ApiProperty()
   content: string;
 
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })  // Utilisation correcte de 'Types.ObjectId'
-  author: User;  // Relation avec l'utilisateur
-
   @Prop({ default: 0 })
-  likes: number;  // Compteur de likes
+  @ApiProperty()
+  likes: number;
+
+  @Prop({ type: [String] })
+  @ApiProperty()
+  comments: string[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);

@@ -13,6 +13,7 @@ exports.UserSchema = exports.User = exports.UserRole = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
+const mongoose_2 = require("mongoose");
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
@@ -41,15 +42,63 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
+    (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], User.prototype, "firstname", void 0);
 __decorate([
+    (0, mongoose_1.Prop)(),
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], User.prototype, "lastname", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], User.prototype, "profilePicture", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], User.prototype, "bio", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], User.prototype, "skills", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], User.prototype, "projects", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({
+        type: {
+            github: { type: String },
+            linkedin: { type: String }
+        },
+        default: { github: '', linkedin: '' },
+    }),
+    (0, swagger_1.ApiProperty)({
+        type: Object,
+        description: 'Social links for the user',
+        example: { github: 'https://github.com/user', linkedin: 'https://linkedin.com/in/user' }
+    }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Object)
+], User.prototype, "socialLinks", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ type: [mongoose_2.Types.ObjectId], ref: 'Post' }),
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Array)
+], User.prototype, "posts", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({
         timestamps: true

@@ -20,9 +20,11 @@ const user_schema_1 = require("./schemas/user.schema");
 const bcrypt = require("bcryptjs");
 const jwt_1 = require("@nestjs/jwt");
 const config_1 = require("@nestjs/config");
+const post_entity_1 = require("../posts/entities/post.entity");
 let AuthService = class AuthService {
-    constructor(userModel, jwtService, configService) {
+    constructor(userModel, postModel, jwtService, configService) {
         this.userModel = userModel;
+        this.postModel = postModel;
         this.jwtService = jwtService;
         this.configService = configService;
     }
@@ -71,7 +73,9 @@ let AuthService = class AuthService {
         return user;
     }
     async update(id, updateUserDto) {
-        const updatedUser = await this.userModel.findByIdAndUpdate(id, updateUserDto, { new: true }).exec();
+        const updatedUser = await this.userModel
+            .findByIdAndUpdate(id, updateUserDto, { new: true })
+            .exec();
         if (!updatedUser) {
             throw new common_1.NotFoundException('User not found');
         }
@@ -91,12 +95,31 @@ let AuthService = class AuthService {
         }
         return user;
     }
+    async addPostToUser(userId, createPostDto) {
+        const userObjectId = mongoose_2.Types.ObjectId.isValid(userId)
+            ? new mongoose_2.Types.ObjectId(userId)
+            : userId;
+        const user = await this.userModel.findById(userObjectId);
+        if (!user) {
+            throw new common_1.NotFoundException('User not found');
+        }
+        const newPost = new this.postModel({
+            ...createPostDto,
+            author: userObjectId,
+        });
+        await newPost.save();
+        user.posts.push(newPost._id);
+        await user.save();
+        return newPost;
+    }
 };
 exports.AuthService = AuthService;
 exports.AuthService = AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)(user_schema_1.User.name)),
+    __param(1, (0, mongoose_1.InjectModel)(post_entity_1.Post.name)),
     __metadata("design:paramtypes", [mongoose_2.Model,
+        mongoose_2.Model,
         jwt_1.JwtService,
         config_1.ConfigService])
 ], AuthService);

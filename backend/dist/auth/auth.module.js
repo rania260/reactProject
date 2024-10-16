@@ -14,6 +14,7 @@ const passport_1 = require("@nestjs/passport");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
 const user_schema_1 = require("./schemas/user.schema");
+const post_entity_1 = require("../posts/entities/post.entity");
 const config_1 = require("@nestjs/config");
 const google_strategy_1 = require("./google.strategy");
 let AuthModule = class AuthModule {
@@ -25,16 +26,17 @@ exports.AuthModule = AuthModule = __decorate([
             passport_1.PassportModule.register({ defaultStrategy: 'jwt' }),
             jwt_1.JwtModule.registerAsync({
                 inject: [config_1.ConfigService],
-                useFactory: (config) => {
-                    return {
-                        secret: config.get('JWT_SECRET'),
-                        signOptions: {
-                            expiresIn: config.get('JWT_EXPIRES'),
-                        }
-                    };
-                }
+                useFactory: (config) => ({
+                    secret: config.get('JWT_SECRET'),
+                    signOptions: {
+                        expiresIn: config.get('JWT_EXPIRES'),
+                    },
+                }),
             }),
-            mongoose_1.MongooseModule.forFeature([{ name: user_schema_1.User.name, schema: user_schema_1.UserSchema }])
+            mongoose_1.MongooseModule.forFeature([
+                { name: user_schema_1.User.name, schema: user_schema_1.UserSchema },
+                { name: post_entity_1.Post.name, schema: post_entity_1.PostSchema },
+            ]),
         ],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, jwt_1.JwtService, google_strategy_1.GoogleStrategy],
